@@ -3,9 +3,8 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Users;
+use App\Entity\User;
 use App\Security\Jwt\JwtValidator;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
@@ -31,11 +30,11 @@ class VerifyController extends AbstractController
             !Token -> return redirectionerror
             !User -> return redirectionerror  */
         if ($verifyToken) {
-            $user = $doctrine->getRepository(Users::class)->findOneBy(['email' => $verifyToken]);
+            $user = $doctrine->getRepository(User::class)->findOneBy(['email' => $verifyToken]);
             if (!$user) {
                 return $this->redirect("http://localhost:5173/emailconfirmerror");
             } else {
-                $user->getRegistry()->setMailConfirmed(true);
+                $user->setMailToken("verify");
                 $entityManager = $doctrine->getManager();
                 $entityManager->flush();
                 return $this->redirect("http://localhost:5173/emailconfirmsucces");

@@ -7,8 +7,6 @@ use DateTimeImmutable;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
-use Symfony\Component\Security\Core\User\UserInterface;
-
 
 /**
  * Class JwtBuilder
@@ -29,16 +27,6 @@ class JWTBuilder
     {
         $now = new DateTimeImmutable();
         $token = $this->configuration->builder()
-            // Configures the issuer (iss claim)
-            ->issuedBy($_SERVER['HTTP_HOST'])
-            // Configures the audience (aud claim)
-            ->permittedFor($_SERVER['HTTP_HOST'])
-            // Configures the id (jti claim)
-            ->identifiedBy($user)
-            // Configures the time that the token was issue (iat claim)
-            ->issuedAt($now)
-            // Configures the time that the token can be used (nbf claim)
-            ->canOnlyBeUsedAfter($now)
             // Configures the expiration time of the token (exp claim)
             ->expiresAt($now->modify('+1 hour'))
             // Configures a new claim, called "uid"
